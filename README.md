@@ -17,3 +17,7 @@ We have all our variables except the ST, which is what out simulation will provi
 
 To price our option, we're going to create a simulation that provides us with many observations for the final proce of the asset ST. We will just take an average of all these values and get our ST.
 
+## Extending the model 
+After pricing basic European options by Monte Carlo Simulations, we can extend our model to generate prices for some exotic options. 
+
+We will create a new class called Binary_Options to play around with this
