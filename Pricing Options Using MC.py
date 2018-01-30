@@ -10,6 +10,7 @@ from math import exp, sqrt
 import pandas as pd
 from matplotlib import pyplot as plt
 
+" Common Function Go Here"
 def generate_asset_prices(S, v,r,T):
     """
 
@@ -32,7 +33,22 @@ def call_payoff(S_T, K):
     """
     return max(0.0, S_T - K)
 
+def put_payoff(S_T, K):
+    """
+
+    :param S_T: The stimulated stock price
+    :param K: The given strike price
+    :return: payoff
+    """
+    return max(K - S_T, 0.0)
+
+"    END     "
+
+
 class price_european_call(object):
+    """
+    This class computes the price of a Vanilla Call/Put option.
+    """
 
     def initialise(self , spot_price, vol, risk_free_rate, term, strike_price, simulations):
         self.S = spot_price
@@ -60,10 +76,15 @@ class price_european_call(object):
         print "The price of the European Call Option is % .4f" %(price)
 
 
+class Binary_Options(object):
+    """
+    A binary option (all-or-nothing or digital option) is an option where the payoff is either some amount or nothing at all. The payoff is, usually, a fixed amount
+    or the value of the asset.
+    """
 if  __name__ == "__main__":
 
 
     term = (datetime.date(2013,9,21) - datetime.date(2013,9,3)).days / 365.0
     european_call =  price_european_call()
-    european_call.initialise(857.29, 0.2076, 0.0014, term, 860.0, 9000)
+    european_call.initialise(857.29, 0.2076, 0.0014, term, 860.0, 90000)
     european_call.calculate_price()
