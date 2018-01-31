@@ -27,7 +27,7 @@ def generate_asset_prices(S, v,r,T):
 def call_payoff(S_T, K):
     """
 
-    :param S_T: The stimulated stock price
+    :param S_T: The simulated stock price
     :param K: The given strike price
     :return: payoff
     """
@@ -36,11 +36,23 @@ def call_payoff(S_T, K):
 def put_payoff(S_T, K):
     """
 
-    :param S_T: The stimulated stock price
+    :param S_T: The simulated stock price
     :param K: The given strike price
     :return: payoff
     """
     return max(K - S_T, 0.0)
+
+def binary_call_payoff(S_T, K):
+    """
+    Since it is a Binary Option, we will
+    :param S_T: The simulated stock price
+    :param K: The given strike price
+    :return:
+    """
+    if S_T >= K:
+        return 1.0
+    else :
+        return 0.0
 
 "    END     "
 
@@ -63,7 +75,7 @@ class price_european_call(object):
         discount_factor = exp(-(self.r) *self.T)
         for i in range(self.simulations):
             S_T = generate_asset_prices(self.S, self.vol, self.r, self.T)
-            result.append((S_T,call_payoff(S_T, self.k)))
+            result.append((S_T, call_payoff(S_T, self.k)))
 
         """
         Let us convert this into a Dataframe to plot the Price vs Payoff
@@ -81,10 +93,45 @@ class Binary_Options(object):
     A binary option (all-or-nothing or digital option) is an option where the payoff is either some amount or nothing at all. The payoff is, usually, a fixed amount
     or the value of the asset.
     """
+
+
+    def initialise(self , spot_price, vol, risk_free_rate, term, strike_price, simulations):
+        self.S = spot_price
+        self.vol = vol
+        self.r = risk_free_rate
+        self.T = term
+        self.k = strike_price
+        self.simulations = simulations
+
+    def calculate_price(self):
+        result = []
+        payoffs = 0.0
+        discount_factor = exp(-(self.r) * self.T)
+        for i in range(self.simulations):
+            S_T = generate_asset_prices(self.S, self.vol, self.r, self.T)
+            payoffs = binary_call_payoff(S_T, self.k)
+            result.append((S_T,payoffs))
+
+        """
+        Let us convert this into a Dataframe to plot the Price vs Payoff
+        """
+        df = pd.DataFrame(data=result, columns=['Price', 'Binary_Payoff'])
+        print df.head()
+        df = df.sort_values('Price', ascending = True)
+        df.plot(x='Price', y='Binary_Payoff', style='o')
+        plt.show()
+        price = discount_factor * (sum(df['Binary_Payoff'])/ float(self.simulations))
+        print "The price of the Binary Option is % .4f" % (price)
+
 if  __name__ == "__main__":
 
 
     term = (datetime.date(2013,9,21) - datetime.date(2013,9,3)).days / 365.0
-    european_call =  price_european_call()
-    european_call.initialise(857.29, 0.2076, 0.0014, term, 860.0, 90000)
-    european_call.calculate_price()
+
+    # european_call =  price_european_call()
+    # european_call.initialise(857.29, 0.2076, 0.0014, term, 860.0, 90000)
+    # european_call.calculate_price()
+
+    binary_options = Binary_Options()
+    binary_options.initialise(857.29, 0.2076, 0.0014, term, 860.0, 900000)
+    binary_options.calculate_price()
