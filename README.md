@@ -20,4 +20,8 @@ To price our option, we're going to create a simulation that provides us with ma
 ## Extending the model 
 After pricing basic European options by Monte Carlo Simulations, we can extend our model to generate prices for some exotic options. 
 
-We will create a new class called Binary_Options to play around with this
+We will create a new class called Binary_Options to play around with thi. We can price a binary option by using the same methodology as before or we can use the B-S Model.
+
+    C=e−rTN(d2)
+    
+ Here N is the cumulative normal distribution function, and d2 is given by the standard Black Scholes formula.
