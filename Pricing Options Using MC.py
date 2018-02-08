@@ -6,9 +6,10 @@ __copyright__ = 'Aviral_Kumar'
 
 import datetime
 from random import gauss
-from math import exp, sqrt
+from math import exp, sqrt, log
 import pandas as pd
 from matplotlib import pyplot as plt
+from scipy.stats import norm
 
 " Common Function Go Here"
 def generate_asset_prices(S, v,r,T):
@@ -103,7 +104,7 @@ class Binary_Options(object):
         self.k = strike_price
         self.simulations = simulations
 
-    def calculate_price(self):
+    def calculate_price_MC(self):
         result = []
         payoffs = 0.0
         discount_factor = exp(-(self.r) * self.T)
@@ -113,7 +114,7 @@ class Binary_Options(object):
             result.append((S_T,payoffs))
 
         """
-        Let us convert this into a Dataframe to plot the Price vs Payoff
+        Let us convert th is into a Dataframe to plot the Price vs Payoff
         """
         df = pd.DataFrame(data=result, columns=['Price', 'Binary_Payoff'])
         print df.head()
@@ -122,10 +123,18 @@ class Binary_Options(object):
         plt.show()
         price = discount_factor * (sum(df['Binary_Payoff'])/ float(self.simulations))
         print "The price of the Binary Option is % .4f" % (price)
+        return price
+
+    def calculate_price_BS(self):
+        d2 = (log(self.S/ self.k) + (self.r - 0.5*self.vol**2) * self.T) / self.vol*sqrt(self.T)
+        price =  exp(-self.r * self.T) * norm.cdf(d2)
+        return price
 
 if  __name__ == "__main__":
 
-
+    """
+    Enter the current spot price , Volatility, Risk - Free Rate, Term, Strike Price, Number of Simulations
+    """
     term = (datetime.date(2013,9,21) - datetime.date(2013,9,3)).days / 365.0
 
     # european_call =  price_european_call()
@@ -134,4 +143,6 @@ if  __name__ == "__main__":
 
     binary_options = Binary_Options()
     binary_options.initialise(857.29, 0.2076, 0.0014, term, 860.0, 900000)
-    binary_options.calculate_price()
+    price_MC = binary_options.calculate_price_MC()
+    price_BS = binary_options.calculate_price_BS()
+    print "The price using Monte-Carlo Simulation is %s and using Black Scholes Model is %s.\n We are only off by %s" %(price_MC, price_BS, price_BS-price_MC)
