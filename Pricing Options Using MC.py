@@ -9,6 +9,7 @@ import European_Options as EurOpt
 import Binary_Options as BinOpt
 import Helper_Functions as hf
 
+# TODO Update Binary_Options and European_Options to be able to price both Put and Call Coptions
 
 
 if  __name__ == "__main__":
