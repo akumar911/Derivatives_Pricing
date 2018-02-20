@@ -16,21 +16,24 @@ class price_european_call(object):
     This class computes the price of a Vanilla Call/Put option.
     """
 
-    def initialise(self , spot_price, vol, risk_free_rate, term, strike_price, simulations):
+    def initialise(self , spot_price, vol, risk_free_rate, term, strike_price, simulations, right ):
         self.S = spot_price
         self.vol = vol
         self.r = risk_free_rate
         self.T = term
         self.k = strike_price
         self.simulations = simulations
+        self.right = right
 
     def calculate_price(self):
         result = []
         discount_factor = exp(-(self.r) *self.T)
         for i in range(self.simulations):
             S_T = hf.generate_asset_prices(self.S, self.vol, self.r, self.T)
-            result.append((S_T, hf.call_payoff(S_T, self.k)))
-
+            if self.right == "C" :
+                result.append((S_T, hf.call_payoff(S_T, self.k)))
+            else :
+                result.append((S_T, hf.put_payoff(S_T, self.k)))
         """
         Let us convert this into a Dataframe to plot the Price vs Payoff
         """

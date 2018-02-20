@@ -8,7 +8,6 @@ __copyright__ = 'The Oakleaf Group, LLC.'
 
 from random import gauss
 from math import exp, sqrt, log
-import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.stats import norm
 
@@ -57,3 +56,14 @@ def binary_call_payoff(S_T, K):
     else :
         return 0.0
 
+def binary_put_payoff(S_T, K):
+    """
+        Since it is a Binary Option, we will
+        :param S_T: The simulated stock price
+        :param K: The given strike price
+        :return:
+        """
+    if S_T <= K:
+        return 1.0
+    else:
+        return 0.0

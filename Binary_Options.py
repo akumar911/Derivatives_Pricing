@@ -20,21 +20,24 @@ class Binary_Options(object):
     """
     print "Welcome to the Binary Options Pricing Engine"
 
-    def initialise(self , spot_price, vol, risk_free_rate, term, strike_price, simulations):
+    def initialise(self , spot_price, vol, risk_free_rate, term, strike_price, simulations, right):
         self.S = spot_price
         self.vol = vol
         self.r = risk_free_rate
         self.T = term
         self.k = strike_price
         self.simulations = simulations
-
+        self.right = right
     def calculate_price_MC(self):
         result = []
         payoffs = 0.0
         discount_factor = exp(-(self.r) * self.T)
         for i in range(self.simulations):
             S_T = hf.generate_asset_prices(self.S, self.vol, self.r, self.T)
-            payoffs = hf.binary_call_payoff(S_T, self.k)
+            if self.right == "C":
+                payoffs = hf.binary_call_payoff(S_T, self.k)
+            else:
+                payoffs = hf.binary_put_payoff(S_T, self.k)
             result.append((S_T,payoffs))
 
         """

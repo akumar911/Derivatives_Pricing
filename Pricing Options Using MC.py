@@ -9,22 +9,23 @@ import European_Options as EurOpt
 import Binary_Options as BinOpt
 import Helper_Functions as hf
 
-# TODO Update Binary_Options and European_Options to be able to price both Put and Call Coptions
+
 
 
 if  __name__ == "__main__":
 
     """
-    Enter the current spot price , Volatility, Risk - Free Rate, Term, Strike Price, Number of Simulations
+    Enter the current spot price , Volatility, Risk - Free Rate, Term, Strike Price, Number of Simulations, Right (Call/Put)
     """
-    term = (datetime.date(2013,9,21) - datetime.date(2013,9,3)).days / 365.0
+    right = "P"
 
+    term = (datetime.date(2013,9,21) - datetime.date(2013,9,3)).days / 365.0
     european_call =  EurOpt.price_european_call()
-    european_call.initialise(857.29, 0.2076, 0.0014, term, 860.0, 90000)
+    european_call.initialise(857.29, 0.2076, 0.0014, term, 860.0, 90000, right = right)
     european_call.calculate_price()
 
     binary_options = BinOpt.Binary_Options()
-    binary_options.initialise(857.29, 0.2076, 0.0014, term, 860.0, 900000)
+    binary_options.initialise(857.29, 0.2076, 0.0014, term, 860.0, 900000, right = right)
     price_MC = binary_options.calculate_price_MC()
     price_BS = binary_options.calculate_price_BS()
     print "The price using Monte-Carlo Simulation is %s and using Black Scholes Model is %s.\n We are only off by %s" %(price_MC, price_BS, price_BS-price_MC)
