@@ -1,4 +1,4 @@
-# Derivatives_Pricing (Work in Progress)
+# Derivatives_Pricing
 This repository contains the derivatives pricing programs
 
 
@@ -25,3 +25,9 @@ We will create a new class called Binary_Options to play around with thi. We can
     C=e^(−rT)N(d2)
     
  Here N is the cumulative normal distribution function, and d2 is given by the standard Black Scholes formula.
+ 
+ NOTE : The cumulative normal distribution function can be accessed by import norm from scipy.stats and calling the cdf function (norm.cdf('d2')).
+ 
+ ## Calculating the Break-Even Move
+Black-Scholes says that when the underlying moves by one standard deviation, your gamma profits should offset your theta losses.
+This known as the break even move
