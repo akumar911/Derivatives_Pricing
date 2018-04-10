@@ -67,3 +67,5 @@ def binary_put_payoff(S_T, K):
         return 1.0
     else:
         return 0.0
+
+# def find_vol(target_value, )

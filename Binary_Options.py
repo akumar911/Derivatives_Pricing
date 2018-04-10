@@ -43,13 +43,13 @@ class Binary_Options(object):
         """
         Let us convert th is into a Dataframe to plot the Price vs Payoff
         """
-        df = pd.DataFrame(data=result, columns=['Price', 'Binary_Payoff'])
+        right = ("Call" if self.right == "C" else "Put")
+        df = pd.DataFrame(data=result, columns=['Price', '%s Binary_Payoff'%right]).sort_values('Price', ascending = True)
         print df.head()
-        df = df.sort_values('Price', ascending = True)
-        df.plot(x='Price', y='Binary_Payoff', style='o')
+        df.plot(x='Price', y='%s Binary_Payoff'%right, style='o')
         plt.show()
-        price = discount_factor * (sum(df['Binary_Payoff'])/ float(self.simulations))
-        print "The price of the Binary Option is % .4f" % (price)
+        price = discount_factor * (sum(df['%s Binary_Payoff'%right])/ float(self.simulations))
+        print "The price of the %s Binary Option is % .4f" % (right,price)
         return price
 
     def calculate_price_BS(self):

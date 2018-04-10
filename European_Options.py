@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import norm
 import Helper_Functions as hf
 
-class price_european_call(object):
+class price_european_option(object):
     """
     This class computes the price of a Vanilla Call/Put option.
     """
@@ -34,13 +34,14 @@ class price_european_call(object):
                 result.append((S_T, hf.call_payoff(S_T, self.k)))
             else :
                 result.append((S_T, hf.put_payoff(S_T, self.k)))
+        right = ("Call" if self.right == "C" else "Put")
         """
         Let us convert this into a Dataframe to plot the Price vs Payoff
         """
-        df = pd.DataFrame(data = result, columns= ['Price','Call_Payoff'])
+        df = pd.DataFrame(data = result, columns= ['Price','%s_Payoff'%right]).sort('Price', ascending= True)
         print df.head()
-        df.plot(x = 'Price',y = 'Call_Payoff', style = 'o')
+        df.plot(x = 'Price',y = '%s_Payoff'%(right), style = 'o')
         plt.show()
-        price = discount_factor * (sum(df['Call_Payoff']) / float(self.simulations))
-        print "The price of the European Call Option is % .4f" %(price)
+        price = discount_factor * (sum(df['%s_Payoff'%right]) / float(self.simulations))
+        print "The price of the European %s Option is % .4f" %(right,price)
 
