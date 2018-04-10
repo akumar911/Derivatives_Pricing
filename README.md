@@ -30,7 +30,7 @@ We will create a new class called Binary_Options to play around with thi. We can
  
  ## Calculating the Break-Even Move
  
- ###P&L=−Θδt+12Γ(δS)2
+    P&L=−Θδt+12Γ(δS)2
 
 You are losing value due to Theta but then gaining some value due to Gamma. 
 
