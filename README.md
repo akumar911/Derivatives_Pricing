@@ -29,5 +29,14 @@ We will create a new class called Binary_Options to play around with thi. We can
  NOTE : The cumulative normal distribution function can be accessed by import norm from scipy.stats and calling the cdf function (norm.cdf('d2')).
  
  ## Calculating the Break-Even Move
+ 
+    P&L=−Θδt+12Γ(δS)2
+
+You are losing value due to Theta but then gaining some value due to Gamma. 
+
 Black-Scholes says that when the underlying moves by one standard deviation, your gamma profits should offset your theta losses.
 This known as the break even move
+
+### To-do : 
+Write a class that for the BSM model 
+Calculate the Option Greeks
