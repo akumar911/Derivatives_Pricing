@@ -10,7 +10,8 @@ from random import gauss
 from math import exp, sqrt, log
 from matplotlib import pyplot as plt
 from scipy.stats import norm
-
+N = norm.cdf
+n = norm.pdf
 
 def generate_asset_prices(S, v,r,T):
     """
@@ -67,5 +68,48 @@ def binary_put_payoff(S_T, K):
         return 1.0
     else:
         return 0.0
+
+def bs_price(right, spot_price, strike_price, time_to_exp, rate, sigma, q = 0.0):
+
+    d1 = (log(spot_price/strike_price) + (rate + sigma*sigma/2.)*time_to_exp)/(sigma * sqrt(time_to_exp))
+    d2 = d1 - sigma*sqrt(time_to_exp)
+    if right == 'C':
+        price = spot_price*exp(-q * time_to_exp)* N(d1) - strike_price*exp(-rate*time_to_exp) * N(d2)
+    else:
+        price = strike_price*exp(-rate*time_to_exp)* N(-d2) - spot_price*exp(-q*time_to_exp)*N(-d1)
+    return price
+
+def bs_vega(right, spot_price, strike_price, time_to_exp, rate, sigma , q = 0.0):
+    d1 = (log(spot_price/ strike_price)  + (rate + sigma*sigma/2.)*time_to_exp)/ (sigma*sqrt(time_to_exp))
+    return spot_price * sqrt(time_to_exp) * n(d1)
+
+
+
+def find_vol_newton(target_value, right, spot_price, strike_price, time_to_exp, rate):
+    '''
+    This function implements the Newton Method in python and calculates the most precise Volatility value
+    :param target_value:
+    :param call_put:
+    :param spot_price:
+    :param strike_price:
+    :param time_to_exp:
+    :param rate:
+    :return:
+    '''
+    iterations = 100
+    precision = 0.0005
+    sigma = 0.5
+    for i in range(0, iterations):
+        price = bs_price(right, spot_price, strike_price, time_to_exp, rate, sigma)
+        vega = bs_vega(right, spot_price, strike_price, time_to_exp, rate, sigma)
+
+        diff = target_value - price
+        if abs(diff) < precision :
+            return sigma
+        else:
+            sigma = sigma + diff/vega
+
+    price = bs_price(right, spot_price, strike_price, time_to_exp, rate, sigma)
+    return sigma
 
 # def find_vol(target_value, )
