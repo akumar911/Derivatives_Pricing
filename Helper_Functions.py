@@ -2,7 +2,7 @@
 "Copyright Aviral_Kumar"
 __author__ = "Aviral (Avi) Kumar"
 __date__ = '2/15/2018'
-__copyright__ = 'The Oakleaf Group, LLC.'
+__copyright__ = 'Aviral (Avi) Kumar'
 
 
 
@@ -12,6 +12,11 @@ from matplotlib import pyplot as plt
 from scipy.stats import norm
 N = norm.cdf
 n = norm.pdf
+import pandas as pd
+import csv
+import requests
+import re
+import datetime as dt
 
 def generate_asset_prices(S, v,r,T):
     """
@@ -112,4 +117,30 @@ def find_vol_newton(target_value, right, spot_price, strike_price, time_to_exp, 
     price = bs_price(right, spot_price, strike_price, time_to_exp, rate, sigma)
     return sigma
 
-# def find_vol(target_value, )
+def GoogleFinanceAPI(ticker, period = 60, days = 1):
+    # prefix = "http://finance.google.com/finance/info?client=ig&q="
+    # url = prefix + "%s:%s"%(exchange, symbol)
+    # u = urllib2.urlopen(url)
+    # content = u.read().decode('utf-8')
+    # print content
+    url = 'http://www.google.com/finance/getprices?i={period}&p={days}d&f=d,o,h,l,c,v&df=cpct&q={ticker}'.format(ticker=ticker,
+                                                                          period=period,days=days)
+    page = requests.get(url)
+    reader = csv.reader(page.content.splitlines())
+    columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+    rows = []
+    times = []
+    for row in reader:
+        if re.match('^[a\d]', row[0]):
+            if row[0].startswith('a'):
+                start = dt.datetime.fromtimestamp(int(row[0][1:]))
+                times.append(start)
+            else:
+                times.append(start + dt.timedelta(seconds=period * int(row[0])))
+            rows.append(map(float, row[1:]))
+    if len(rows):
+        return pd.DataFrame(rows, index=pd.DatetimeIndex(times, name='Date'),
+                            columns=columns)
+    else:
+        return pd.DataFrame(rows, index=pd.DatetimeIndex(times, name='Date'))
+

@@ -2,7 +2,7 @@
 "Copyright Aviral_Kumar"
 __author__ = "Aviral (Avi) Kumar"
 __date__ = '2/15/2018'
-__copyright__ = 'The Oakleaf Group, LLC.'
+__copyright__ = 'Aviral (Avi) Kumar'
 
 from random import gauss
 from math import exp, sqrt, log
